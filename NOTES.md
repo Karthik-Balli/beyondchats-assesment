@@ -25,3 +25,13 @@ Firstly, I had a brainstorming session with an LLM, dissucssed about the tech st
 
 - At Final we completed the Backend project intalization.
 - From here we are following a branching strategy, to maintian two different branches for frontend, and backen. Then If I'd like to add any specific future to the application now or in feature, we will create a new branch for that feature and merge into the main.
+
+---
+
+**Stuck in the confiuration error loop**
+- While connecting the mysql to the application, Intially faced some difficulty with setting up the `Xaamp` Server. Later resolved eventually.
+- But While migration ar error occured about the `PDOException::("could not find driver")`.
+- The issue occurred because the system PHP CLI was using `C:\php\php.ini` instead of the XAMPP PHP configuration at `C:\xampp\php\php.ini`. 
+- As a result, required extensions like `pdo_mysql` were not enabled, causing Laravel database connection errors (e.g., “could not find driver”). 
+- This happens when the system PATH prioritizes a different PHP installation than XAMPP. The fix enabled in the correct `php.ini`.
+- However, I tried to created a table named `beyondinbox`, and migrated that table.
