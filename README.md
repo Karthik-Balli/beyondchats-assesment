@@ -172,3 +172,278 @@ Used for:
 6. Improvising the Application Performance
 7. Testing the Application
 8. Deployment
+
+## Backend Architecture
+
+The backend is built using **Laravel** and exposes REST APIs that power the React dashboard.
+
+The system is responsible for:
+
+* handling Gmail authentication
+* syncing emails from Gmail
+* storing threads and messages
+* providing APIs for the frontend dashboard
+
+The backend follows a **layered architecture** consisting of:
+
+* Routes
+* Controllers
+* Services
+* Models
+* Background Jobs
+
+---
+
+# Routes
+
+Laravel routes define how HTTP requests are handled by the application.
+
+This project uses two route groups:
+
+### Web Routes
+
+Located in:
+
+routes/web.php
+
+These routes handle **Google OAuth authentication** because OAuth requires session support.
+
+Example:
+
+```
+use App\Http\Controllers\AuthController;
+
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
+
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+```
+
+Endpoints:
+
+```
+GET /auth/google
+GET /auth/google/callback
+```
+
+Purpose:
+
+* Redirect users to Google for authentication
+* Receive OAuth callback after user grants access
+
+---
+
+### API Routes
+
+Located in:
+
+routes/api.php
+
+These routes provide the **REST APIs consumed by the React frontend**.
+
+Example:
+
+```
+Route::prefix('v1')->group(function () {
+
+    Route::get('/threads', [ThreadController::class, 'index']);
+
+    Route::get('/threads/{id}', [ThreadController::class, 'show']);
+
+    Route::post('/emails/sync', [EmailController::class, 'sync']);
+
+    Route::post('/threads/{id}/reply', [EmailController::class, 'reply']);
+
+});
+```
+
+Example endpoints:
+
+```
+GET /api/v1/threads
+GET /api/v1/threads/{id}
+POST /api/v1/emails/sync
+POST /api/v1/threads/{id}/reply
+```
+
+These APIs are responsible for:
+
+* retrieving email threads
+* retrieving messages in a thread
+* triggering Gmail sync
+* sending replies to emails
+
+---
+
+# Controllers
+
+Controllers contain the request-handling logic of the application.
+
+Each controller focuses on a specific responsibility.
+
+### AuthController
+
+Handles Gmail OAuth authentication.
+
+Location:
+
+```
+app/Http/Controllers/AuthController.php
+```
+
+Responsibilities:
+
+* redirect users to Google OAuth
+* handle the OAuth callback
+* retrieve Gmail access tokens
+
+Example methods:
+
+```
+redirectToGoogle()
+handleGoogleCallback()
+```
+
+Workflow:
+
+```
+User clicks "Connect Gmail"
+        ↓
+/auth/google
+        ↓
+Google OAuth login
+        ↓
+User grants permissions
+        ↓
+Google redirects to
+/auth/google/callback
+        ↓
+Application receives Gmail access token
+```
+
+---
+
+### ThreadController
+
+Handles fetching email threads and messages.
+
+Location:
+
+```
+app/Http/Controllers/ThreadController.php
+```
+
+Responsibilities:
+
+* retrieving email threads
+* retrieving conversation messages
+* returning structured data to the frontend
+
+Example endpoints:
+
+```
+GET /api/v1/threads
+GET /api/v1/threads/{id}
+```
+
+---
+
+### EmailController
+
+Handles email-related actions.
+
+Responsibilities include:
+
+* syncing emails from Gmail
+* sending replies to threads
+
+Example endpoints:
+
+```
+POST /api/v1/emails/sync
+POST /api/v1/threads/{id}/reply
+```
+
+---
+
+# Google OAuth Integration
+
+The application integrates with **Google OAuth 2.0** to securely access Gmail data.
+
+The OAuth flow allows users to grant permission to the application to read and send emails.
+
+Laravel Socialite is used to simplify OAuth integration.
+
+Package used:
+
+```
+laravel/socialite
+```
+
+---
+
+## OAuth Flow
+
+```
+User clicks "Connect Gmail"
+        ↓
+Frontend redirects user to backend endpoint
+/auth/google
+        ↓
+Backend redirects user to Google OAuth
+        ↓
+User authenticates with Google
+        ↓
+User grants Gmail permissions
+        ↓
+Google redirects back to
+/auth/google/callback
+        ↓
+Application receives OAuth tokens
+```
+
+---
+
+## Required Gmail Permissions
+
+The application requests the following scopes:
+
+```
+https://www.googleapis.com/auth/gmail.readonly
+https://www.googleapis.com/auth/gmail.send
+```
+
+These permissions allow the system to:
+
+* read email threads
+* fetch message contents
+* send email replies
+
+---
+
+## OAuth Configuration
+
+OAuth credentials are configured in the `.env` file:
+
+```
+GOOGLE_CLIENT_ID=xxxx
+GOOGLE_CLIENT_SECRET=xxxx
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
+```
+
+Laravel loads these values through:
+
+```
+config/services.php
+```
+
+Example configuration:
+
+```
+'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => env('GOOGLE_REDIRECT_URI'),
+],
+```
+
+---
