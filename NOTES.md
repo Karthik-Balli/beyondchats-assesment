@@ -41,3 +41,25 @@ Firstly, I had a brainstorming session with an LLM, dissucssed about the tech st
 - Layered Architecture: Uses a production-grade structure with Services for Gmail API logic, Jobs for background syncing, and Models for database relationships.
 - RESTful API Endpoints: Provides secure routes in api.php to fetch paginated chat lists and detailed conversation histories for the React frontend.
 - Sync & Reply Logic: Implements backend controllers to fetch a specific number of days of history and handle outgoing replies to existing email threads.
+
+### Here we added multiple routes
+Example Endpoints:
+```
+GET /api/v1/threads
+GET /api/v1/threads/{id}
+POST /api/v1/emails/sync
+POST /api/v1/threads/{id}/reply
+```
+
+
+### Controllers
+- Built Authentication logic in **AuthController**, It can redirect users to Google OAuth, handle the OAuth callback, retrieve Gmail access tokens.
+- **Thread Controller** handles fetching email threads and messages.
+- **Email Controller** handles email-related actions.
+
+### Google OAuth Integration
+- The application integrates with **Google OAuth 2.0** to securely access Gmail data.
+- The OAuth flow allows users to grant permission to the application to read and send emails.
+- Laravel Socialite is used to simplify OAuth integration.
+
+*Note*: Added Flowcharts and sequence diagrams to get a visual understanding of the application.
