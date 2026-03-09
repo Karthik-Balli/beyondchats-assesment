@@ -35,3 +35,9 @@ Firstly, I had a brainstorming session with an LLM, dissucssed about the tech st
 - As a result, required extensions like `pdo_mysql` were not enabled, causing Laravel database connection errors (e.g., “could not find driver”). 
 - This happens when the system PATH prioritizes a different PHP installation than XAMPP. The fix enabled in the correct `php.ini`.
 - However, I tried to created a table named `beyondinbox`, and migrated that table.
+
+### Controller and Models
+- Threaded Data Model: Organizes emails into a "chat" format by grouping Gmail messages and their formatting into Threads, Messages, and Attachments tables.
+- Layered Architecture: Uses a production-grade structure with Services for Gmail API logic, Jobs for background syncing, and Models for database relationships.
+- RESTful API Endpoints: Provides secure routes in api.php to fetch paginated chat lists and detailed conversation histories for the React frontend.
+- Sync & Reply Logic: Implements backend controllers to fetch a specific number of days of history and handle outgoing replies to existing email threads.
