@@ -1,4 +1,4 @@
-Hey, I'm Karthik balli 👋
+Hey, I'm **Karthik balli** 👋
 
 Welcome to the BeyondInbox, a **full-stack dashboard application** that integrates with **Gmail** to fetch, store, and manage email conversations in a **chat-style interface**.
 
@@ -9,3 +9,19 @@ BeyondInbox📩 is an email integration dashboard built for BeyondChats.
 It transforms traditional email threads into a chat-style inbox experience,
 allowing users to sync Gmail conversations, manage threads, and reply to emails
 directly from a unified dashboard.
+
+-----------
+
+## Developement Flow
+
+Firstly, I had a brainstorming session with an LLM, dissucssed about the tech stack, libraries, technolgies, coding patterns, bussiness logic and UX design.
+
+### Local Setup
+*Backend using Laravel*
+
+- Actually Backend setup takes more time that I expected, Quite good experience!
+- Larvel, needs composer no manage all these packages, while installing these packages got an error `Failed to extract laravel/laravel`. Then got some perssion oriented and packages installation issuses, fixed sequestionally. got learned lot things from `Laravel`.
+- Bcoz, Most of my work on the JS evnivronments, and also profiecient in Python, built couple of projects.
+
+- At Final we completed the Backend project intalization.
+- From here we are following a branching strategy, to maintian two different branches for frontend, and backen. Then If I'd like to add any specific future to the application now or in feature, we will create a new branch for that feature and merge into the main.
