@@ -63,3 +63,12 @@ POST /api/v1/threads/{id}/reply
 - Laravel Socialite is used to simplify OAuth integration.
 
 *Note*: Added Flowcharts and sequence diagrams to get a visual understanding of the application.
+
+### Technical Challenges & Resolutions
+During the integration of Laravel and the Google Graph API, the following hurdles were resolved:
+
+- Google OAuth Sandbox: Fixed "Access Blocked" errors by explicitly adding developer emails as Test Users in the Google Cloud Console.
+- Redirect URI Mismatch: Resolved redirect_uri_mismatch by synchronizing the Laravel callback routes with the authorized URIs in the Google Credentials dashboard.
+- SSL/cURL Handshake: Fixed OAuth request failures by configuring the cacert.pem certificate path in the php.ini file to allow secure communication with Google servers.
+- Session Persistence: Resolved "Session store not set" errors by moving OAuth callback routes from api.php to web.php, enabling necessary middleware for stateful authentication.
+- Authentication Flow: Handled temporary 401 Unauthorized responses by ensuring the Gmail Access Token is correctly passed from the OAuth handshake to the background Sync Service.

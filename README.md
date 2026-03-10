@@ -447,3 +447,85 @@ Example configuration:
 ```
 
 ---
+
+### Email Sync
+The Email Synchronization feature is the core backend functionality of the application. It allows the system to fetch email threads from a user's Gmail account and store them in the application's database for further processing and display in the dashboard.
+
+### How It Works
+
+After a user successfully connects their Gmail account through Google OAuth, the system receives an **access token** that allows secure communication with the Gmail API.
+
+When the user initiates an email sync request, the backend performs the following steps:
+
+```text
+User initiates email sync
+        ↓
+API endpoint receives request
+        ↓
+EmailSyncService triggered
+        ↓
+GmailService communicates with Gmail API
+        ↓
+Email threads retrieved
+        ↓
+Threads stored in database
+```
+
+---
+
+### Backend Components
+
+The email sync feature is implemented using a **service-based architecture** to keep the code modular and maintainable.
+
+#### GmailService
+
+Responsible for communicating with the Gmail API.
+
+Responsibilities include:
+
+* creating an authenticated Gmail client
+* fetching email threads from Gmail
+* returning Gmail data to the application
+
+---
+
+#### EmailSyncService
+
+Handles the synchronization logic.
+
+Responsibilities include:
+
+* retrieving Gmail threads using the GmailService
+* processing thread data
+* storing threads in the database
+
+---
+
+#### EmailController
+
+Handles the API endpoint that triggers email synchronization.
+
+Example endpoint:
+
+```text
+POST /api/v1/emails/sync
+```
+
+This endpoint accepts a request specifying how many days of emails should be synchronized.
+
+Example request:
+
+```json
+{
+  "days": 7
+}
+```
+
+---
+
+### Google OAuth
+
+- The application includes Gmail OAuth integration that allows users to securely connect their Gmail account. 
+- Once authenticated, users can initiate email synchronization to fetch Gmail threads through the Gmail API. 
+- The backend processes and stores email threads and message metadata in a structured database format. 
+- A REST API layer is implemented to trigger email syncing and retrieve conversation threads for the dashboard.
