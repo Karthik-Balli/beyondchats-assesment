@@ -522,3 +522,10 @@ Example request:
 ```
 
 ---
+
+### Google OAuth
+
+- The application includes Gmail OAuth integration that allows users to securely connect their Gmail account. 
+- Once authenticated, users can initiate email synchronization to fetch Gmail threads through the Gmail API. 
+- The backend processes and stores email threads and message metadata in a structured database format. 
+- A REST API layer is implemented to trigger email syncing and retrieve conversation threads for the dashboard.

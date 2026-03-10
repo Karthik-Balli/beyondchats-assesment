@@ -27,4 +27,13 @@ class GmailService
 
         return $gmail->users_threads->listUsersThreads('me');
     }
+
+    public function getThread($accessToken, $threadId)
+    {
+        $client = $this->getClient($accessToken);
+
+        $gmail = new \Google\Service\Gmail($client);
+
+        return $gmail->users_threads->get('me', $threadId);
+    }
 }

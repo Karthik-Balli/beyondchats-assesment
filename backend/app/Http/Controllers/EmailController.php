@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\EmailSyncService;
+use Illuminate\Support\Facades\Auth;
 
 class EmailController extends Controller
 {
@@ -16,20 +17,32 @@ class EmailController extends Controller
 
     public function sync(Request $request)
     {
-        $days = $request->input('days', 7);
+        $user = Auth::user();
 
-        $accessToken = auth()->user()->access_token ?? null;
+        if (!$user) {
+            return response()->json([
+                'error' => 'User not authenticated'
+            ], 401); 
+        }
+
+        $accessToken = $user->access_token;
 
         if (!$accessToken) {
             return response()->json([
-                'error' => 'User not authenticated'
+                'error' => 'No access token found. Please re-authenticate with Google.'
             ], 401);
         }
 
-        $this->syncService->syncEmails($accessToken);
+        try {
+            $this->syncService->syncEmails($accessToken);
 
-        return response()->json([
-            'message' => 'Emails synced successfully'
-        ]);
+            return response()->json([
+                'message' => 'Emails synced successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to sync emails: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
